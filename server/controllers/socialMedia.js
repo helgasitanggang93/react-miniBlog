@@ -1,26 +1,24 @@
-const AfterHighSchool = require('../models/profile/afterHighSchool');
+const SocialMedia = require('../models/profile/socialMedia');
 
-class AfterHighSchool {
+class SocialMediaController {
 
     static create(req, res){
         const {userId} = req.body
         const {name,
-            dateJoin,
-            dateGraduate,
-            faculty,
-            major,
-            degree,
+            dateBegin,
+            dateFinish,
+            role,
+            image,
             description} = req.body
 
-        AfterHighSchool
+        SocialMedia
         .create({
             userId,
             name,
-            dateJoin,
-            dateGraduate,
-            faculty,
-            major,
-            degree,
+            dateBegin,
+            dateFinish,
+            role,
+            image,
             description
         })
         .then((data) => {
@@ -33,7 +31,7 @@ class AfterHighSchool {
 
     static readAll(req, res) {
         
-        AfterHighSchool
+        SocialMedia
         .find()
         .then(data => {
             res.status(200).json(data)
@@ -47,7 +45,7 @@ class AfterHighSchool {
         
         const {userId} = req.body
 
-        AfterHighSchool
+        SocialMedia
         .find({_id: userId})
         .then(data => {
             res.status(200).json(data)
@@ -60,7 +58,7 @@ class AfterHighSchool {
     static readOne(req, res){
         const {id} = req.params
 
-        AfterHighSchool
+        SocialMedia
         .findOne({_id: id})
         .then(data => {
             res.status(200).json(data)
@@ -73,20 +71,18 @@ class AfterHighSchool {
     static update(res, req){
         const {id} = req.params
         const {name,
-            dateJoin,
-            dateGraduate,
-            faculty,
-            major,
-            degree,
+            dateBegin,
+            dateFinish,
+            role,
+            image,
             description} = req.body
         
         let obj = {
             name,
-            dateJoin,
-            dateGraduate,
-            faculty,
-            major,
-            degree,
+            dateBegin,
+            dateFinish,
+            role,
+            image,
             description
         }
 
@@ -96,10 +92,10 @@ class AfterHighSchool {
             }
         }
 
-       AfterHighSchool
+       SocialMedia
        .findOneAndUpdate({_id: id}, obj)
        .then(() => {
-           return AfterHighSchool.findOne({_id: id})
+           return SocialMedia.findOne({_id: id})
        })
        .then(data => {
            res.status(200).json(data)
@@ -109,7 +105,6 @@ class AfterHighSchool {
        })
 
     }
-
 }
 
-module.exports = AfterHighSchool
+module.exports = SocialMediaController
