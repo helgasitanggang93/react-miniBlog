@@ -18,7 +18,7 @@ mongoose.connect(uri, function(err) {
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
-app.use('/', blogRoutes);
+app.use('/api', blogRoutes);
 app.listen(port, function () {
     console.log(`listening on port ${port}`);
     
