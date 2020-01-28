@@ -105,6 +105,18 @@ class SkillDataController {
        })
 
     }
+
+    static delete(req, res , next) {
+        const {id} = req.params
+
+         SkillData
+         .findOneAndDelete({_id: id})
+         .then(data => {
+            res.status(201).json(data)
+         })
+         .catch(next)
+
+    }
 }
 
 module.exports = SkillDataController

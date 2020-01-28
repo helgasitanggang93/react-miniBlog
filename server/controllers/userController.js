@@ -4,7 +4,7 @@ const {sign} = require('../helpers/jwt')
 
 class UserController {
 
-    static signUp(req, res) {
+    static signUp(req, res, next) {
         
         const {fullName, email, password} = req.body
 
@@ -17,22 +17,10 @@ class UserController {
         .then(() => {
             res.status(201).json({message:'register success'})
         })
-        .catch(({errors}) => {
-            const {email, name, password} = errors
-
-            if(email){
-                res.status(400).json({message: email.message})
-            }else if(name){
-                res.status(400).json({message : name.message})
-            }else if(password){
-                res.status(400).json({message: password.message})
-            }else {
-                res.status(400).json(errors)
-            }
-        })
+        .catch(next)
     }
 
-    static login(req, res) {
+    static login(req, res, next) {
         const {email, password} = req.body
 
         User
@@ -40,7 +28,7 @@ class UserController {
         .then( data => {
             if(!data || !compare(password, data.password)){
 
-                throw 'email/password incorect'
+                throw {status: 400, message: 'email/password incorect'}
 
             }else{
                 const {email} = data
@@ -48,13 +36,10 @@ class UserController {
                 res.status(200).json({token})
             }
         })
-        .catch(errors => {
-
-            res.status(401).json({message: errors})
-        })
+        .catch(next)
     }
 
-    static updatePersonalData(req, res){
+    static updatePersonalData(req, res, next){
         const {userId} = req.body
         const {
             fullName, 
@@ -83,31 +68,46 @@ class UserController {
 
         })
         .then(data => {
-
-            res.status(201).json(data)
+            const {_id, 
+                fullName, 
+                email, 
+                image, 
+                dateOfBirth } = data
+            res.status(201).json({
+                _id,
+                fullName,
+                email,
+                image,
+                dateOfBirth
+            })
             
         })
-        .catch(err => {
-            res.status(401).json(err)
-        })
+        .catch(next)
     }
 
-    static readOnePersonalData(req, res) {
+    static readOnePersonalData(req, res, next) {
         const {userId} = req.body
         User
         .findOne({_id: userId})
         .then(data => {
-            res.status(200).json({
-                _id: data._id,
-                fullName: data.fullName,
-                phoneNumber: data.phoneNumber,
-                dateOfBirth: data.dateOfBirth,
-                image: data.image
-            })
-            .catch(err => {
-                res.status(401).json(err)
-            })
+            if(data){
+                const {_id, 
+                    fullName, 
+                    email, 
+                    image, 
+                    dateOfBirth } = data
+                res.status(200).json({
+                    _id,
+                    fullName,
+                    email,
+                    image,
+                    dateOfBirth
+                })
+            }else {
+                throw {status: 404}
+            }
         })
+        .catch(next)
     }
 }
 

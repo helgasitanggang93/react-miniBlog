@@ -1,9 +1,10 @@
 const router = require('express').Router()
 const userRoutes = require('./users')
+const portofolioRoutes = require('./portofolios')
+const imageRoutes = require('./images')
 
 router.use('/users', userRoutes)
+router.use('/portofolios', portofolioRoutes)
+router.use('/upload', imageRoutes)
 
-router.post('/portofolio', authenticationUser, PortofolioController.create);
-router.get('/portofolio', authenticationUser, PortofolioController.readAll)
-router.patch('/portofolio/:id', authenticationCommon, authorizationPortofolio, PortofolioController.create);
 module.exports = router

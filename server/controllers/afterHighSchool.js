@@ -110,6 +110,18 @@ class AfterHighSchool {
 
     }
 
+    static delete(req, res , next) {
+        const {id} = req.params
+
+         AfterHighSchool
+         .findOneAndDelete({_id: id})
+         .then(data => {
+            res.status(201).json(data)
+         })
+         .catch(next)
+
+    }
+
 }
 
 module.exports = AfterHighSchool

@@ -2,7 +2,7 @@ const Portofolio = require('../models/profile/portofolio')
 
 class PortofolioController {
 
-    static create(req, res){
+    static create(req, res, next){
         const {userId} = req.body
         const {
             name, 
@@ -25,24 +25,20 @@ class PortofolioController {
         .then((data) => {
             res.status(201).json(data)
         })
-        .catch(err => {
-            res.status(400).json(err)
-        })
+        .catch(next)
     }
 
-    static readAll(req, res) {
+    static readAll(req, res, next) {
         
         Portofolio
         .find()
         .then(data => {
             res.status(200).json(data)
         })
-        .catch(err => {
-            res.status(401).json(err)
-        })
+        .catch(next)
     }
 
-    static readAllAdmin(req, res) {
+    static readAllAdmin(req, res, next) {
         
         const {userId} = req.body
 
@@ -51,26 +47,27 @@ class PortofolioController {
         .then(data => {
             res.status(200).json(data)
         })
-        .catch(err => {
-            res.status(401).json(err)
-        })
+        .catch(next)
     }
 
-    static readOne(req, res){
+    static readOne(req, res, next){
         const {id} = req.params
 
         Portofolio
         .findOne({_id: id})
         .then(data => {
-            res.status(200).json(data)
+            if(data){
+                res.status(200).json(data)
+            }else {
+                throw {status: 404}
+            }
         })
-        .catch(err => {
-            res.status(401).json(err)
-        })
+        .catch(next)
     }
 
-    static update(res, req){
+    static update(req, res, next){
         const {id} = req.params
+        console.log(req.body)
         const {
             name,
             dateBegin,
@@ -93,18 +90,37 @@ class PortofolioController {
                 delete obj[key] 
             }
         }
+   
+    if(Object.keys(obj).length === 0){
+
+        next({status: 401})
+
+    }else{
 
        Portofolio
        .findOneAndUpdate({_id: id}, obj)
        .then(() => {
+           
            return Portofolio.findOne({_id: id})
        })
        .then(data => {
            res.status(200).json(data)
        })
-       .catch(err => {
-           res.status(401).json(err)
-       })
+       .catch(next)
+    
+
+    }
+    }
+
+    static delete(req, res , next) {
+        const {id} = req.params
+
+         Portofolio
+         .findOneAndDelete({_id: id})
+         .then(data => {
+            res.status(201).json(data)
+         })
+         .catch(next)
 
     }
 

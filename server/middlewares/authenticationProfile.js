@@ -11,20 +11,18 @@ const authenticationUser = (req, res, next) => {
                     req.body.userId = data._id
                     next()
                 }else {
-                   throw 'WRONG USER'
+                  next({status: 403, message: 'Forbidden Access'})
                 }
             })
-            .catch(err => {
-               throw err
-            })
+            .catch(next)
     
         }else {
             // res.status(401).json({message: 'NOT AUTHENTICATION'})
-            throw 'NOT AUTHENTICATION'
+            next ({status:401, message:'Not Authentication'})
         }
         
     } catch (error) {
-        res.status(401).json(error)
+       next({status: 401, message: 'Not Logged In'})
     }
    
 }
@@ -40,20 +38,18 @@ const authenticationCommon = (req, res, next) => {
                     next()
     
                 }else {
-                    throw 'WRONG USER'
+                    next({status: 403, message: 'Forbidden Access'})
                 }
             })
-            .catch(err => {
-               throw err
-            })
+            .catch(next)
     
         }else {
             // res.status(401).json({message: 'NOT AUTHENTICATION'})
-            throw 'NOT AUTHENTICATION'
+            next({status: 400, message: 'Not Authentication'})
         }
         
     } catch (error) {
-        res.status(401).json(error)
+        next({status: 401, message: 'Not Logged In'})
     }
    
 }
